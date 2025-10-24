@@ -54,26 +54,7 @@ static void MainLoop()
 
         if (state == GameState.Playing)
         {
-            if (ball.SpeedX < 0 && ball.X < screenWidth / 2)
-            {
-                if (ball.X - ball.Radius <= distanceToEdge)
-                {
-                    playerRight.ScoreIncrement();
-                    ResetGame(ref state, ball, playerLeft, playerRight);
-                    continue;
-                }
-                ball.CheckPlayerCollision(playerLeft.GetRectangle());
-            }
-            else if (ball.SpeedX > 0 && ball.X >= screenWidth / 2)
-            {
-                if (ball.X + ball.Radius >= Raylib.GetScreenWidth() - distanceToEdge)
-                {
-                    playerLeft.ScoreIncrement();
-                    ResetGame(ref state, ball, playerLeft, playerRight);
-                    continue;
-                }
-                ball.CheckPlayerCollision(playerRight.GetRectangle());
-            }
+            AnalyzeBallPosition(ball, ref state, playerLeft, playerRight);
 
             ball.Move(dt);
             playerLeft.Move(dt);
@@ -91,6 +72,28 @@ static void MainLoop()
     }
 
     Raylib.CloseWindow();
+}
+
+static void AnalyzeBallPosition(Ball ball, ref GameState state, PlayerRectangle playerLeft, PlayerRectangle playerRight)
+{
+    if (ball.SpeedX < 0 && ball.X < screenWidth / 5)
+    {
+        if (ball.X - ball.Radius <= distanceToEdge)
+        {
+            playerRight.ScoreIncrement();
+            ResetGame(ref state, ball, playerLeft, playerRight);
+        }
+        ball.CheckPlayerCollision(playerLeft.GetRectangle());
+    }
+    else if (ball.SpeedX > 0 && ball.X > screenWidth * 4 / 5)
+    {
+        if (ball.X + ball.Radius >= Raylib.GetScreenWidth() - distanceToEdge)
+        {
+            playerLeft.ScoreIncrement();
+            ResetGame(ref state, ball, playerLeft, playerRight);
+        }
+        ball.CheckPlayerCollision(playerRight.GetRectangle());
+    }
 }
 
 static void ResetGame(ref GameState state, Ball ball, PlayerRectangle playerLeft, PlayerRectangle playerRight)
