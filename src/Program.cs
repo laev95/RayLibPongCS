@@ -1,6 +1,5 @@
 ﻿using Raylib_cs;
 using GameNamespace;
-using System.Runtime.CompilerServices;
 
 const int screenWidth = 854;
 const int screenHeight = 480;
