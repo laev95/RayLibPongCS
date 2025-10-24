@@ -1,5 +1,6 @@
 ﻿using Raylib_cs;
 using GameNamespace;
+using System.Runtime.CompilerServices;
 
 const int screenWidth = 854;
 const int screenHeight = 480;
@@ -9,11 +10,11 @@ const int rectangleWidth = 15;
 const int rectangleHeight = 75;
 const int rectangleSpawnX = screenWidth - (distanceToEdge + rectangleWidth);
 const int rectangleSpawnY = (screenHeight / 2) - (rectangleHeight / 2);
-const int rectangleSpeed = 4;
+const int rectangleSpeed = 200;
 
 const int ballRadius = 10;
-const int ballSpeedX = 6;
-const int ballSpeedY = 6;
+const int ballSpeedX = 300;
+const int ballSpeedY = 300;
 
 const float pauseDuration = 1.0f;
 
@@ -39,9 +40,9 @@ static void MainLoop()
 
         if (state == GameState.Playing)
         {
-            ball.Move();
-            playerLeft.Move();
-            playerRight.Move();
+            ball.Move(dt);
+            playerLeft.Move(dt);
+            playerRight.Move(dt);
         }
         else if (state == GameState.Paused)
         {
@@ -56,7 +57,7 @@ static void MainLoop()
         Raylib.BeginDrawing();
 
         Raylib.ClearBackground(screen.BackgroundColor);
-        
+
         Raylib.DrawText($"{playerLeft.Score}", screenWidth / 4, 20, 50, Color.White);
         Raylib.DrawText($"{playerRight.Score}", screenWidth * 3 / 4, 20, 50, Color.White);
 
@@ -72,10 +73,7 @@ static void MainLoop()
             if (ball.X - ball.Radius <= 0)
             {
                 playerRight.ScoreIncrement();
-                state = GameState.Paused;
-                ball.Reset();
-                playerLeft.Reset();
-                playerRight.Reset();
+                ResetGame(ref state, ball, playerLeft, playerRight);
 
             }
         }
@@ -85,15 +83,20 @@ static void MainLoop()
             if (ball.X + ball.Radius >= Raylib.GetScreenWidth())
             {
                 playerLeft.ScoreIncrement();
-                state = GameState.Paused;
-                ball.Reset();
-                playerLeft.Reset();
-                playerRight.Reset();
-
+                ResetGame(ref state, ball, playerLeft, playerRight);
             }
         }
 
         Raylib.EndDrawing();
     }
     Raylib.CloseWindow();
+}
+
+static void ResetGame(ref GameState state, Ball ball, PlayerRectangle playerLeft, PlayerRectangle playerRight)
+{
+    ball.Reset();
+    playerLeft.Reset();
+    playerRight.Reset();
+
+    state = GameState.Paused;
 }

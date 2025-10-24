@@ -2,7 +2,7 @@ namespace GameNamespace;
 
 public interface IGameObject
 {
-    public void Move();
+    public void Move(float dt);
     public void Draw();
     public void Reset();
 }

@@ -8,33 +8,34 @@ class Ball(int x, int y, int radius, int speedX, int speedY, Color color = defau
     private readonly int _startX = x;
     private readonly int _startY = y;
 
-    public int X { get; private set; } = x;
-    public int Y { get; private set; } = y;
+    public float X { get; private set; } = x;
+    public float Y { get; private set; } = y;
     public int Radius { get; private set; } = radius;
     public int SpeedX { get; private set; } = speedX;
     public int SpeedY { get; private set; } = speedY;
     public Color Color { get; private set; } = color;
 
-    public void Move()
+    public void Move(float dt)
     {
-        X += SpeedX;
-        Y += SpeedY;
-
         if (Y - Radius <= 0 || Y + Radius >= Raylib.GetScreenHeight())
         {
             SpeedY *= -1;
         }
+
+        X += SpeedX * dt;
+        Y += SpeedY * dt;
     }
 
     public void Draw()
     {
-        Raylib.DrawCircle(X, Y, Radius, Color);
+        Raylib.DrawCircle((int) X, (int) Y, Radius, Color);
     }
 
     public void CheckPlayerCollision(Rectangle player)
     {
         Vector2 ballPos = new(X, Y);
 
+        // BUG Collides even when not touching visually at corner of rectangle
         if (Raylib.CheckCollisionCircleRec(ballPos, Radius, player))
         {
             SpeedX *= -1;
