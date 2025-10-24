@@ -60,7 +60,7 @@ static void MainLoop()
                 {
                     playerRight.ScoreIncrement();
                     ResetGame(ref state, ball, playerLeft, playerRight);
-
+                    continue;
                 }
                 ball.CheckPlayerCollision(playerLeft.GetRectangle());
             }
@@ -70,6 +70,7 @@ static void MainLoop()
                 {
                     playerLeft.ScoreIncrement();
                     ResetGame(ref state, ball, playerLeft, playerRight);
+                    continue;
                 }
                 ball.CheckPlayerCollision(playerRight.GetRectangle());
             }
