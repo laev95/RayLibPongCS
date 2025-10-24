@@ -33,10 +33,7 @@ class Ball(int x, int y, int radius, int speedX, int speedY, Color color = defau
 
     public void CheckPlayerCollision(Rectangle player)
     {
-        Vector2 ballPos = new(X, Y);
-
-        // BUG Collides even when not touching visually at corner of rectangle
-        if (Raylib.CheckCollisionCircleRec(ballPos, Radius, player))
+        if (Raylib.CheckCollisionCircleRec(new Vector2(X, Y), Radius, player))
         {
             SpeedX *= -1;
         }

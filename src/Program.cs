@@ -37,22 +37,6 @@ static void MainLoop()
     {
         float dt = Raylib.GetFrameTime();
 
-        if (state == GameState.Playing)
-        {
-            ball.Move(dt);
-            playerLeft.Move(dt);
-            playerRight.Move(dt);
-        }
-        else if (state == GameState.Paused)
-        {
-            pauseTimer += dt;
-            if (pauseTimer >= pauseDuration)
-            {
-                state = GameState.Playing;
-                pauseTimer = 0f;
-            }
-        }
-
         Raylib.BeginDrawing();
 
         Raylib.ClearBackground(screen.BackgroundColor);
@@ -66,28 +50,45 @@ static void MainLoop()
         playerLeft.Draw();
         playerRight.Draw();
 
-        if (ball.SpeedX < 0 && ball.X < screenWidth / 2)
-        {
-            ball.CheckPlayerCollision(playerLeft.GetRectangle());
-            if (ball.X - ball.Radius <= 0)
-            {
-                playerRight.ScoreIncrement();
-                ResetGame(ref state, ball, playerLeft, playerRight);
-
-            }
-        }
-        else if (ball.SpeedX > 0 && ball.X >= screenWidth / 2)
-        {
-            ball.CheckPlayerCollision(playerRight.GetRectangle());
-            if (ball.X + ball.Radius >= Raylib.GetScreenWidth())
-            {
-                playerLeft.ScoreIncrement();
-                ResetGame(ref state, ball, playerLeft, playerRight);
-            }
-        }
-
         Raylib.EndDrawing();
+
+        if (state == GameState.Playing)
+        {
+            if (ball.SpeedX < 0 && ball.X < screenWidth / 2)
+            {
+                if (ball.X - ball.Radius <= distanceToEdge)
+                {
+                    playerRight.ScoreIncrement();
+                    ResetGame(ref state, ball, playerLeft, playerRight);
+
+                }
+                ball.CheckPlayerCollision(playerLeft.GetRectangle());
+            }
+            else if (ball.SpeedX > 0 && ball.X >= screenWidth / 2)
+            {
+                if (ball.X + ball.Radius >= Raylib.GetScreenWidth() - distanceToEdge)
+                {
+                    playerLeft.ScoreIncrement();
+                    ResetGame(ref state, ball, playerLeft, playerRight);
+                }
+                ball.CheckPlayerCollision(playerRight.GetRectangle());
+            }
+
+            ball.Move(dt);
+            playerLeft.Move(dt);
+            playerRight.Move(dt);
+        }
+        else if (state == GameState.Paused)
+        {
+            pauseTimer += dt;
+            if (pauseTimer >= pauseDuration)
+            {
+                state = GameState.Playing;
+                pauseTimer = 0f;
+            }
+        }
     }
+
     Raylib.CloseWindow();
 }
 
