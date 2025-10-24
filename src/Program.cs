@@ -54,11 +54,11 @@ static void MainLoop()
 
         if (state == GameState.Playing)
         {
-            AnalyzeBallPosition(ball, ref state, playerLeft, playerRight);
-
             ball.Move(dt);
             playerLeft.Move(dt);
             playerRight.Move(dt);
+
+            AnalyzeBallPosition(ball, ref state, playerLeft, playerRight);
         }
         else if (state == GameState.Paused)
         {
