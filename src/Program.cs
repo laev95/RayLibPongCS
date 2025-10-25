@@ -1,4 +1,4 @@
-﻿using Raylib_cs;
+using Raylib_cs;
 using GameNamespace;
 
 const int screenWidth = 854;
@@ -58,7 +58,7 @@ static void MainLoop()
             playerLeft.Move(dt);
             playerRight.Move(dt);
 
-            AnalyzeBallPosition(ball, ref state, playerLeft, playerRight);
+            ProcessBallPosition(ball, ref state, playerLeft, playerRight);
         }
         else if (state == GameState.Paused)
         {
@@ -74,7 +74,7 @@ static void MainLoop()
     Raylib.CloseWindow();
 }
 
-static void AnalyzeBallPosition(Ball ball, ref GameState state, PlayerRectangle playerLeft, PlayerRectangle playerRight)
+static void ProcessBallPosition(Ball ball, ref GameState state, PlayerRectangle playerLeft, PlayerRectangle playerRight)
 {
     if (ball.SpeedX < 0 && ball.X < screenWidth / 5)
     {
@@ -82,6 +82,7 @@ static void AnalyzeBallPosition(Ball ball, ref GameState state, PlayerRectangle 
         {
             playerRight.ScoreIncrement();
             ResetGame(ref state, ball, playerLeft, playerRight);
+            return;
         }
         ball.CheckPlayerCollision(playerLeft.GetRectangle());
     }
@@ -91,6 +92,7 @@ static void AnalyzeBallPosition(Ball ball, ref GameState state, PlayerRectangle 
         {
             playerLeft.ScoreIncrement();
             ResetGame(ref state, ball, playerLeft, playerRight);
+            return;
         }
         ball.CheckPlayerCollision(playerRight.GetRectangle());
     }
